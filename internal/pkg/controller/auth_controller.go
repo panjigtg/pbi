@@ -1,11 +1,13 @@
 package controller
 
 import (
+	"fmt"
+
 	"github.com/gofiber/fiber/v2"
 
 	"pbi/internal/helper"
 	authmodels "pbi/internal/pkg/models"
-	authusecase "pbi/internal/pkg/usecase"
+	authusc "pbi/internal/pkg/usecase"
 )
 
 type AuthController interface {
@@ -14,16 +16,17 @@ type AuthController interface {
 }
 
 type AuthControllerImpl struct {
-	authUsc authusecase.AuthUsecase
+	authUsc authusc.AuthUseCase
 }
 
-func NewAuthController(authUsc authusecase.AuthUsecase) AuthController {
+func NewAuthController(authUsc authusc.AuthUseCase) *AuthControllerImpl {
 	return &AuthControllerImpl{
 		authUsc: authUsc,
 	}
 }
 
 func (uc *AuthControllerImpl) Register(ctx *fiber.Ctx) error {
+	fmt.Println("Register endpoint hit")
 	req := new(authmodels.RegisterRequest)
 
 	// Parse body request

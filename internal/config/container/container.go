@@ -5,16 +5,16 @@ import (
 
 	"pbi/internal/config"
 	"pbi/internal/config/db"
-	// "pbi/internal/pkg/repository"
-	// "pbi/internal/pkg/usecase"
+	"pbi/internal/pkg/repository"
+	"pbi/internal/pkg/usecase"
 	"pbi/internal/utils"
 )
 
 type Container struct {
-	Config   *config.Config
-	DB       *db.Database
+	Config  *config.Config
+	DB      *db.Database
+	UserUsc usecase.AuthUseCase
 }
-
 
 func InitContainer() *Container {
 	cfg, err := config.Load()
@@ -33,13 +33,15 @@ func InitContainer() *Container {
 	}
 
 	// repositories
-
+	userRepo := repository.NewUserRepository(database.Raw)
+	tokoRepo := repository.NewTokoRepository(database.Raw)
 
 	// usecases
-
+	authUsc := usecase.NewAuthUseCase(userRepo, tokoRepo)
 
 	return &Container{
-		Config: cfg,
-		DB:     database,
+		Config:  cfg,
+		DB:      database,
+		UserUsc: authUsc,
 	}
 }

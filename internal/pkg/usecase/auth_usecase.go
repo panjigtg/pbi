@@ -1,15 +1,15 @@
 package usecase
 
 import (
-    "context"
-    "errors"
-    "pbi/internal/pkg/models"
-    "pbi/internal/pkg/entity"
-    "pbi/internal/pkg/repository"
+	"context"
+	"errors"
+	"pbi/internal/pkg/entity"
+	"pbi/internal/pkg/models"
+	"pbi/internal/pkg/repository"
 	"pbi/internal/utils"
 )
 
-type AuthUsecase interface {
+type AuthUseCase interface {
 	Register(ctx context.Context, req *models.RegisterRequest) (*models.UserResponse, error)
 }
 
@@ -18,7 +18,7 @@ type authUsecaseImpl struct {
 	tokoRepo repository.TokoRepository
 }
 
-func NewAuthUsecase(userRepo repository.UserRepository, tokoRepo repository.TokoRepository) AuthUsecase {
+func NewAuthUseCase(userRepo repository.UserRepository, tokoRepo repository.TokoRepository) AuthUseCase {
 	return &authUsecaseImpl{
 		userRepo: userRepo,
 		tokoRepo: tokoRepo,
@@ -43,10 +43,10 @@ func (u *authUsecaseImpl) Register(ctx context.Context, req *models.RegisterRequ
 	hash, _ := utils.HashPassword(req.KataSandi)
 
 	userEntity := &entity.User{
-		Nama:      req.Nama,
-		Email:     req.Email,
-		NoTelp:    req.NoTelp,
-		KataSandi: string(hash),
+		Nama:       req.Nama,
+		Email:      req.Email,
+		NoTelp:     req.NoTelp,
+		KataSandi:  string(hash),
 		IDProvinsi: req.IDProvinsi,
 		IDKota:     req.IDKota,
 		IsAdmin:    false,
