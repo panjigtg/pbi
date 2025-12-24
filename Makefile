@@ -1,7 +1,7 @@
 include .env
 export
 
-MIGRATE_DIR=./internal/infra/migrations
+MIGRATE_DIR=./internal/config/migrations
 
 .PHONY: migrate-create migrate-up migrate-down migrate-force migrate-version
 
