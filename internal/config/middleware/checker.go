@@ -16,7 +16,7 @@ func AuthChecker(strict bool) fiber.Handler {
 			if strict {
 				return helper.Unauthorized(c, "Token tidak ditemukan")
 			}
-			return helper.BadRequest(c, "Authorization header is missing", nil)
+			return helper.BadRequest(c, "Authorization header is missing")
 		}
 
 		tokenString := strings.TrimPrefix(authHeader, "Bearer ")
@@ -46,7 +46,7 @@ func OwnershipChecker(param string) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		paramID, err := strconv.Atoi(c.Params(param))
 		if err != nil {
-			return helper.BadRequest(c, "ID tidak valid", nil)
+			return helper.BadRequest(c, "ID tidak valid", err.Error())
 		}
 
 		userID := c.Locals("user_id").(int)

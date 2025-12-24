@@ -3,7 +3,6 @@ package helper
 import (
 	"encoding/json"
 
-	"pbi/internal/pkg/models"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog/log"
 )
@@ -29,102 +28,47 @@ func logResponse(c *fiber.Ctx, statusCode int, payload interface{}) {
 
 
 func Success(c *fiber.Ctx, message string, data interface{}) error {
-	response := models.MetaInfo{
-		Status:  "success",
-		Message: message,
-		Data:    data,
+	response := fiber.Map{
+		"status":  true,
+		"message": message,
+		"errors":  nil,
+		"data":    data,
 	}
 
 	logResponse(c, fiber.StatusOK, response)
-
 	return c.Status(fiber.StatusOK).JSON(response)
 }
 
 
-
-func Created(c *fiber.Ctx, message string, data interface{}) error {
-	response := models.MetaInfo{
-		Status:  "success",
-		Message: message,
-		Data:    data,
+func Error(c *fiber.Ctx, statusCode int, message string, errs ...string) error {
+	response := fiber.Map{
+		"status":  false,
+		"message": message,
+		"errors":  errs,
+		"data":    nil,
 	}
 
-	logResponse(c, fiber.StatusCreated, response)
-
-	return c.Status(fiber.StatusCreated).JSON(response)
+	logResponse(c, statusCode, response)
+	return c.Status(statusCode).JSON(response)
 }
 
 
-func BadRequest(c *fiber.Ctx, message string, errors interface{}) error {
-	response := models.MetaInfo{
-		Status:  "error",
-		Message: message,
-		Errors:  errors,
-	}
-
-	logResponse(c, fiber.StatusBadRequest, response)
-
-	return c.Status(fiber.StatusBadRequest).JSON(response)
+func BadRequest(c *fiber.Ctx, message string, errs ...string) error {
+	return Error(c, fiber.StatusBadRequest, message, errs...)
 }
-
-
 
 func Unauthorized(c *fiber.Ctx, message string) error {
-	response := models.MetaInfo{
-		Status: "error",
-		Message: message,
-	}
-
-	logResponse(c, fiber.StatusUnauthorized, response)
-
-	return c.Status(fiber.StatusUnauthorized).JSON(response)
+	return Error(c, fiber.StatusUnauthorized, message, "Unauthorized")
 }
-
 
 func Forbidden(c *fiber.Ctx, message string) error {
-	response := models.MetaInfo{
-		Status: "error",
-		Message: message,
-	}
-
-	logResponse(c, fiber.StatusForbidden, response)
-
-	return c.Status(fiber.StatusForbidden).JSON(response)
+	return Error(c, fiber.StatusForbidden, message, "Forbidden")
 }
-
 
 func NotFound(c *fiber.Ctx, message string) error {
-	response := models.MetaInfo{
-		Status:  "error",
-		Message: message,
-	}
-
-	logResponse(c, fiber.StatusNotFound, response)
-
-	return c.Status(fiber.StatusNotFound).JSON(response)
+	return Error(c, fiber.StatusNotFound, message, "Not Found")
 }
-
-
 
 func InternalServerError(c *fiber.Ctx, message string) error {
-	response := models.MetaInfo{
-		Status: "error",
-		Message: message,
-	}
-
-	logResponse(c, fiber.StatusInternalServerError, response)
-
-	return c.Status(fiber.StatusInternalServerError).JSON(response)
+	return Error(c, fiber.StatusInternalServerError, message, "Internal Server Error")
 }
-
-func Paginated(c *fiber.Ctx, message string, data interface{}, meta models.PaginationMeta) error {
-	response := models.MetaInfo{
-		Status: "success",
-		Message: message,
-		Meta: meta,
-		Data: data,
-	}
-
-	logResponse(c, fiber.StatusOK, response)
-	return c.Status(fiber.StatusOK).JSON(response)
-}	

@@ -26,32 +26,54 @@ func NewAuthController(authUsc authusc.AuthUseCase) *AuthControllerImpl {
 func (uc *AuthControllerImpl) Register(ctx *fiber.Ctx) error {
 	req := new(authmodels.RegisterRequest)
 
-	// Parse body request
 	if err := ctx.BodyParser(req); err != nil {
-		return helper.BadRequest(ctx, "invalid request", err.Error())
+		return helper.BadRequest(
+			ctx,
+			"Failed to POST data",
+			"Invalid request body",
+		)
 	}
 
-	// Panggil usecase register
 	res, err := uc.authUsc.Register(ctx.Context(), req)
 	if err != nil {
-		return helper.BadRequest(ctx, err.Error(), nil)
+		return helper.BadRequest(
+			ctx,
+			"Failed to POST data",
+			err.Error(),
+		)
 	}
 
-	return helper.Created(ctx, "user berhasil dibuat", res)
+	return helper.Success(
+		ctx,
+		"Succeed to POST data",
+		res,
+	)
 }
 
 func (uc *AuthControllerImpl) Login(ctx *fiber.Ctx) error {
 	req := new(authmodels.LoginRequest)
 
-	// Parse body request
 	if err := ctx.BodyParser(req); err != nil {
-		return helper.BadRequest(ctx, "invalid request", err.Error())
+		return helper.BadRequest(
+			ctx,
+			"Failed to POST data",
+			"Invalid request body",
+		)
 	}
 
-	// Panggil usecase login
 	res, err := uc.authUsc.Login(ctx.Context(), req)
 	if err != nil {
-		return helper.BadRequest(ctx, err.Error(), nil)
+		return helper.BadRequest(
+			ctx,
+			"Failed to POST data",
+			"Email atau password salah",
+		)
 	}
-	return helper.Success(ctx, "login berhasil", res)
+
+	return helper.Success(
+		ctx,
+		"Succeed to POST data",
+		res,
+	)
 }
+

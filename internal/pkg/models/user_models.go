@@ -20,20 +20,38 @@ type (
 	}
 
 	LoginResponse struct {
-		// User  UserResponse `json:"user"`
-		ID    int          `json:"id"`
-		Nama  string       `json:"nama"`
-		Token string       `json:"token"`
+		Nama         string           `json:"nama"`
+		NoTelp       string           `json:"no_telp"`
+		TanggalLahir string           `json:"tanggal_Lahir"`
+		Tentang      string           `json:"tentang"`
+		Pekerjaan    string           `json:"pekerjaan"`
+		Email        string           `json:"email"`
+		IDProvinsi   ProvinceResponse `json:"id_provinsi"`
+		IDKota       CityResponse     `json:"id_kota"`
+		Token        string           `json:"token"`
 	}
-
 	UserResponse struct {
-		ID     int    `json:"id"`
-		Nama   string `json:"nama"`
-		Email  string `json:"email"`
-		NoTelp string `json:"notelp"`
-		TanggalLahir string `json:"tanggal_lahir"`
-		JenisKelamin string `json:"jenis_kelamin"`
-		Tentang      string `json:"tentang"`
-		Pekerjaan    string `json:"pekerjaan"`
+		ID     			int    			`json:"id"`
+		Nama   			string 			`json:"nama"`
+		Email  			string 			`json:"email"`
+		NoTelp 			string 			`json:"notelp"`
+		TanggalLahir	string 			`json:"tanggal_lahir"`
+		JenisKelamin 	string 			`json:"jenis_kelamin"`
+		Tentang      	string 			`json:"tentang"`
+		Pekerjaan   	string 			`json:"pekerjaan"`
+		IDProvinsi    	ProvinceResponse `json:"id_provinsi"`
+		IDKota       	CityResponse     `json:"id_kota"`
 	}
 )
+
+type ProvinceResponse struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+type CityResponse struct {
+	ID         string `json:"id"`
+	ProvinceID string `json:"province_id"`
+	Name       string `json:"name"`
+}
+
