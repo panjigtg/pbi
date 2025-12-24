@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"fmt"
-
 	"github.com/gofiber/fiber/v2"
 
 	"pbi/internal/helper"
@@ -11,7 +9,7 @@ import (
 )
 
 type AuthController interface {
-	// Login(ctx *fiber.Ctx) error
+	Login(ctx *fiber.Ctx) error
 	Register(ctx *fiber.Ctx) error
 }
 
@@ -26,7 +24,6 @@ func NewAuthController(authUsc authusc.AuthUseCase) *AuthControllerImpl {
 }
 
 func (uc *AuthControllerImpl) Register(ctx *fiber.Ctx) error {
-	fmt.Println("Register endpoint hit")
 	req := new(authmodels.RegisterRequest)
 
 	// Parse body request
@@ -44,5 +41,17 @@ func (uc *AuthControllerImpl) Register(ctx *fiber.Ctx) error {
 }
 
 func (uc *AuthControllerImpl) Login(ctx *fiber.Ctx) error {
-	panic("not implemented") // TODO: Implement me
+	req := new(authmodels.LoginRequest)
+
+	// Parse body request
+	if err := ctx.BodyParser(req); err != nil {
+		return helper.BadRequest(ctx, "invalid request", err.Error())
+	}
+
+	// Panggil usecase login
+	res, err := uc.authUsc.Login(ctx.Context(), req)
+	if err != nil {
+		return helper.BadRequest(ctx, err.Error(), nil)
+	}
+	return helper.Success(ctx, "login berhasil", res)
 }

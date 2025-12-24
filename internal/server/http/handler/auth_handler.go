@@ -9,7 +9,8 @@ import (
 
 func AuthRoute(r fiber.Router, authUsc usecase.AuthUseCase) {
 	controller := authcontroller.NewAuthController(authUsc)
+	rest := r.Group("/auth")
 
-	r.Post("/register", controller.Register)
-	// r.Post("/login", controller.Login)
+	rest.Post("/register", controller.Register)
+	rest.Post("/login", controller.Login)
 }

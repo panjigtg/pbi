@@ -2,12 +2,16 @@ package models
 
 type (
 	RegisterRequest struct {
-		Nama       string `json:"nama" validate:"required"`
-		Email      string `json:"email" validate:"required,email"`
-		NoTelp     string `json:"notelp" validate:"required"`
-		KataSandi  string `json:"kata_sandi" validate:"required,min=6"`
-		IDProvinsi string `json:"id_provinsi" validate:"required"`
-		IDKota     string `json:"id_kota" validate:"required"`
+		Nama        string `json:"nama"`
+		Email       string `json:"email"`
+		NoTelp      string `json:"notelp"`
+		KataSandi   string `json:"kata_sandi"`
+		IDProvinsi  string `json:"id_provinsi"`
+		IDKota      string `json:"id_kota"`
+		TanggalLahir string `json:"tanggal_lahir"` // YYYY-MM-DD
+		JenisKelamin string `json:"jenis_kelamin"`
+		Tentang      string `json:"tentang"`
+		Pekerjaan    string `json:"pekerjaan"`
 	}
 
 	LoginRequest struct {
@@ -16,7 +20,9 @@ type (
 	}
 
 	LoginResponse struct {
-		User  UserResponse `json:"user"`
+		// User  UserResponse `json:"user"`
+		ID    int          `json:"id"`
+		Nama  string       `json:"nama"`
 		Token string       `json:"token"`
 	}
 
@@ -25,5 +31,9 @@ type (
 		Nama   string `json:"nama"`
 		Email  string `json:"email"`
 		NoTelp string `json:"notelp"`
+		TanggalLahir string `json:"tanggal_lahir"`
+		JenisKelamin string `json:"jenis_kelamin"`
+		Tentang      string `json:"tentang"`
+		Pekerjaan    string `json:"pekerjaan"`
 	}
 )
