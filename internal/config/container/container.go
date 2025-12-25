@@ -15,6 +15,7 @@ type Container struct {
 	DB      *db.Database
 	AuthUsc usecase.AuthUseCase
 	UserUsc usecase.UserUseCase
+	CUsc 	usecase.CategoryUseCase
 }
 
 func InitContainer() *Container {
@@ -36,15 +37,18 @@ func InitContainer() *Container {
 	// repositories
 	userRepo := repository.NewUserRepository(database.Raw)
 	tokoRepo := repository.NewTokoRepository(database.Raw)
+	categoryRepo := repository.NewCategoryRepository(database.Raw)
 
 	// usecases
 	authUsc := usecase.NewAuthUseCase(userRepo, tokoRepo)
 	userUsc := usecase.NewUserUseCase(userRepo)
+	categoryUsc := usecase.NewCategoryUseCase(categoryRepo)
 
 	return &Container{
 		Config:  cfg,
 		DB:      database,
 		AuthUsc: authUsc,
 		UserUsc: userUsc,
+		CUsc:    categoryUsc,
 	}
 }

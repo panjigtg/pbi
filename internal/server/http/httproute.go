@@ -10,7 +10,8 @@ import (
 func HttpRouteInit(r *fiber.App, containerConf *container.Container) {
 	// Auth Route
 	api := r.Group("/api/v1")
-	
+
 	rest.AuthRoute(api, containerConf.AuthUsc)
 	rest.UserRoute(api, containerConf.UserUsc)
+	rest.CategoryRoute(api, containerConf.CUsc)
 }

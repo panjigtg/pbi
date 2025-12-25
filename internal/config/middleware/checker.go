@@ -31,11 +31,14 @@ func AuthChecker(strict bool) fiber.Handler {
 	}
 }
 
-func AdminChecker() fiber.Handler {
+func AdminChecker(strict bool) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		isAdmin, ok := c.Locals("is_admin").(bool)
 		if !ok || !isAdmin {
-			return helper.Forbidden(c, "Akses khusus admin")
+			if strict {
+				return helper.Forbidden(c, "Akses khusus admin")
+			}
+			return helper.BadRequest(c, "Authorization header is missing")
 		}
 		return c.Next()
 	}
