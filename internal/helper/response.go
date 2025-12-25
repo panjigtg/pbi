@@ -28,6 +28,10 @@ func logResponse(c *fiber.Ctx, statusCode int, payload interface{}) {
 
 
 func Success(c *fiber.Ctx, message string, data interface{}) error {
+	if data == nil {
+        data = ""
+    }
+
 	response := fiber.Map{
 		"status":  true,
 		"message": message,

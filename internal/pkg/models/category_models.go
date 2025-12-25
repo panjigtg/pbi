@@ -9,4 +9,8 @@ type (
 	CategoryRequest struct {
 		Nama string `json:"nama_category"`
 	}
+
+	UpdateRequest struct {
+		Nama string `json:"nama_category"`
+	}
 )

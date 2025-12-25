@@ -13,6 +13,8 @@ type CategoryController interface {
 	CreateCategory(ctx fiber.Ctx) error
 	GetAllCategories(ctx fiber.Ctx) error
 	GetById(ctx fiber.Ctx) error
+	Update(ctx fiber.Ctx) error
+	Delete(ctx *fiber.Ctx) error
 }
 
 type CategoryControllerImpl struct {
@@ -76,4 +78,42 @@ func (cc *CategoryControllerImpl) GetById(ctx *fiber.Ctx) error {
 		)
 	}
 	return helper.Success(ctx, "Succeed to GET data", res)
+}
+
+func (cc *CategoryControllerImpl) Update(ctx *fiber.Ctx) error {
+	idParam := ctx.Params("id")
+    id, err := strconv.Atoi(idParam)
+    if err != nil {
+        return helper.BadRequest(ctx, "Invalid ID", err.Error())
+    }
+
+	req := &models.UpdateRequest{}
+	if err := ctx.BodyParser(req); err != nil {
+        return helper.BadRequest(ctx, "Invalid request body", err.Error())
+    }
+
+	if req.Nama == "" {
+    return helper.BadRequest(ctx, "Nama category tidak boleh kosong", "Invalid request body")
+	}
+
+
+	 if errStruct := cc.cUsc.Update(ctx.Context(), id, req); errStruct != nil {
+        return helper.BadRequest(ctx, "Failed to update category", errStruct.Err.Error())
+    }
+
+    return helper.Success(ctx, "Category updated successfully", nil)
+}
+
+func (cc *CategoryControllerImpl) Delete(ctx *fiber.Ctx) error {
+	idParam := ctx.Params("id")
+	id, err := strconv.Atoi(idParam)
+	if err != nil {
+		return helper.BadRequest(ctx, "Invalid ID", err.Error())
+	}
+
+	if errStruct := cc.cUsc.Delete(ctx.Context(), id); errStruct != nil {
+		return helper.BadRequest(ctx, "Failed to delete category", errStruct.Err.Error())
+	}
+
+	return helper.Success(ctx, "Category deleted successfully", nil)
 }

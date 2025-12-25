@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"context"
+	"errors"
 
 	"pbi/internal/helper"
 	"pbi/internal/pkg/models"
@@ -13,6 +14,8 @@ type CategoryUseCase interface {
 	CreateCategory(ctx context.Context, category *models.CategoryRequest) (res uint, err *helper.ErrorStruct)
 	GetAllCategories(ctx context.Context) (res []*models.CategoryResponse, err *helper.ErrorStruct)
 	GetById(ctx context.Context, id int)(res *models.CategoryResponse, err *helper.ErrorStruct)
+	Update(ctx context.Context, id int, req *models.UpdateRequest) *helper.ErrorStruct
+	Delete(ctx context.Context, id int) *helper.ErrorStruct
 }
 
 type categoryUsecaseImpl struct {
@@ -77,3 +80,48 @@ func (u *categoryUsecaseImpl) GetById(ctx context.Context, id int)(res *models.C
 
 	return res, nil
 }
+
+
+func (u *categoryUsecaseImpl) Update(ctx context.Context, id int, req *models.UpdateRequest) *helper.ErrorStruct {
+	if req.Nama == "" {
+		return &helper.ErrorStruct{
+			Err:  errors.New("Nama category tidak boleh kosong"),
+			Code: 400,
+		}
+	}
+
+	err := u.categoryRepo.Update(ctx, id, req)
+	if err != nil {
+		if err == repository.ErrCategoryNotFound {
+			return &helper.ErrorStruct{
+				Err:  errors.New("ID category tidak valid"),
+				Code: 404,
+			}
+		}
+		return &helper.ErrorStruct{
+			Err:  errors.New("Failed to update category"),
+			Code: 500,
+		}
+	}
+
+	return nil
+}
+
+func (u *categoryUsecaseImpl) Delete(ctx context.Context, id int) *helper.ErrorStruct {
+	err := u.categoryRepo.Delete(ctx, id)
+	if err != nil {
+		if err == repository.ErrCategoryNotFound {
+			return &helper.ErrorStruct{
+				Err:  errors.New("ID category tidak valid"),
+				Code: 404,
+			}
+		}
+		return &helper.ErrorStruct{
+			Err:  errors.New("Failed to delete category"),
+			Code: 500,
+		}
+	}
+
+	return nil
+}
+

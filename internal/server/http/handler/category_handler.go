@@ -17,4 +17,6 @@ func CategoryRoute(r fiber.Router, cUsc usecase.CategoryUseCase) {
 	rest.Get("/",middleware.AdminChecker(true), categoryController.GetAllCategories)
 	rest.Get("/:id",middleware.AdminChecker(true), categoryController.GetById)
 	rest.Post("/",middleware.AdminChecker(true), categoryController.CreateCategory)
+	rest.Put("/:id",middleware.AdminChecker(true), categoryController.Update)
+	rest.Delete("/:id",middleware.AdminChecker(true), categoryController.Delete)
 }

@@ -3,14 +3,20 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"errors"
+
 	"pbi/internal/pkg/entity"
+	"pbi/internal/pkg/models"
 )
+
+var ErrCategoryNotFound = errors.New("category not found")
 
 type CategoryRepository interface {
 	Create(ctx context.Context, category *entity.Category) error
 	GetAll(ctx context.Context) ([]*entity.Category, error)
 	GetById(ctx context.Context, id int) (*entity.Category, error)
-	Update(ctx context.Context, id int) (*entity.Category, error)
+	Update(ctx context.Context, id int, req *models.UpdateRequest)  error
+	Delete(ctx context.Context, id int)  error
 }
 
 type categoryRepositoryImpl struct {
@@ -68,4 +74,47 @@ func (r *categoryRepositoryImpl) GetById(ctx context.Context, id int) (*entity.C
 	}
 
 	return &category, nil
+}
+
+func (r *categoryRepositoryImpl) Update(ctx context.Context, id int, req *models.UpdateRequest) error {
+	query := 
+		`
+		UPDATE category SET
+			nama_category = COALESCE(?, nama_category)
+		WHERE id = ?
+	`
+	result, err := r.db.ExecContext(ctx, query, req.Nama, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return ErrCategoryNotFound
+	}
+
+	return nil
+}
+
+func (r *categoryRepositoryImpl) Delete(ctx context.Context, id int)  error {
+	query := `DELETE FROM category WHERE id = ?`
+	result, err := r.db.ExecContext(ctx, query, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return ErrCategoryNotFound
+	}
+
+	return nil
 }
