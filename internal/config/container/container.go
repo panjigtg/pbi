@@ -13,7 +13,8 @@ import (
 type Container struct {
 	Config  *config.Config
 	DB      *db.Database
-	UserUsc usecase.AuthUseCase
+	AuthUsc usecase.AuthUseCase
+	UserUsc usecase.UserUseCase
 }
 
 func InitContainer() *Container {
@@ -38,10 +39,12 @@ func InitContainer() *Container {
 
 	// usecases
 	authUsc := usecase.NewAuthUseCase(userRepo, tokoRepo)
+	userUsc := usecase.NewUserUseCase(userRepo)
 
 	return &Container{
 		Config:  cfg,
 		DB:      database,
-		UserUsc: authUsc,
+		AuthUsc: authUsc,
+		UserUsc: userUsc,
 	}
 }

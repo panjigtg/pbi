@@ -3,7 +3,7 @@ package usecase
 import (
 	"context"
 	"errors"
-	"fmt"
+	// "fmt"
 	"pbi/internal/pkg/entity"
 	"pbi/internal/pkg/models"
 	"pbi/internal/pkg/repository"
@@ -122,8 +122,8 @@ func (u *authUsecaseImpl) Login(ctx context.Context, req *models.LoginRequest) (
 		Token: token,
 	}
 
-	fmt.Printf("PROV FROM EMSIFA: %+v\n", prov)
-	fmt.Printf("CITY FROM EMSIFA: %+v\n", city)
+	// fmt.Printf("PROV FROM EMSIFA: %+v\n", prov)
+	// fmt.Printf("CITY FROM EMSIFA: %+v\n", city)
 
 	return res, nil
 }

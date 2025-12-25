@@ -59,3 +59,4 @@ func ValidateToken(tokenString string) (*models.JWTClaims, error) {
 
 	return claims, nil
 }
+	

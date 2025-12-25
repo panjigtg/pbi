@@ -6,7 +6,7 @@ MIGRATE_DIR=./internal/config/migrations
 .PHONY: migrate-create migrate-up migrate-down migrate-force migrate-version
 
 run: 
-	go run ./app/main.go
+	go run ./app/web/main.go
 
 migrate-create:
 	migrate create -ext sql -dir $(MIGRATE_DIR) -seq $(name)

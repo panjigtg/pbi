@@ -31,7 +31,6 @@ type (
 		Token        string           `json:"token"`
 	}
 	UserResponse struct {
-		ID     			int    			`json:"id"`
 		Nama   			string 			`json:"nama"`
 		Email  			string 			`json:"email"`
 		NoTelp 			string 			`json:"notelp"`
@@ -41,6 +40,19 @@ type (
 		Pekerjaan   	string 			`json:"pekerjaan"`
 		IDProvinsi    	ProvinceResponse `json:"id_provinsi"`
 		IDKota       	CityResponse     `json:"id_kota"`
+	}
+
+	UpdateProfileRequest struct {
+		Nama   			*string 			`json:"nama"`
+		Email  			*string 			`json:"email"`
+		KataSandi   	*string 			`json:"kata_sandi"`
+		NoTelp 			*string 			`json:"notelp"`
+		TanggalLahir	*string 			`json:"tanggal_lahir"`
+		JenisKelamin 	*string 			`json:"jenis_kelamin"`
+		Tentang      	*string 			`json:"tentang"`
+		Pekerjaan   	*string 			`json:"pekerjaan"`
+		IDProvinsi     	*string 			`json:"id_provinsi"`
+		IDKota          *string 			`json:"id_kota"`
 	}
 )
 
