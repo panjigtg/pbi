@@ -3,6 +3,7 @@ package usecase
 import (
 	"context"
 	"errors"
+
 	// "fmt"
 	"pbi/internal/pkg/entity"
 	"pbi/internal/pkg/models"
@@ -18,12 +19,14 @@ type AuthUseCase interface {
 type authUsecaseImpl struct {
 	userRepo repository.UserRepository
 	tokoRepo repository.TokoRepository
+	AddrUsc  AddressUsecase
 }
 
-func NewAuthUseCase(userRepo repository.UserRepository, tokoRepo repository.TokoRepository) AuthUseCase {
+func NewAuthUseCase(userRepo repository.UserRepository, tokoRepo repository.TokoRepository, AddrUsc AddressUsecase) AuthUseCase {
 	return &authUsecaseImpl{
 		userRepo: userRepo,
 		tokoRepo: tokoRepo,
+		AddrUsc: AddrUsc,
 	}
 }
 
@@ -39,12 +42,14 @@ func (u *authUsecaseImpl) Register(ctx context.Context, req *models.RegisterRequ
 		}
 	}
 
-	if ok, _ := utils.ValidateProvince(req.IDProvinsi); !ok {
+	if _, err := u.AddrUsc.GetProvinceDetail(ctx, req.IDProvinsi); err != nil {
 		return "", errors.New("provinsi tidak valid")
 	}
-	if ok, _ := utils.ValidateCity(req.IDProvinsi, req.IDKota); !ok {
+
+	if _, err := u.AddrUsc.GetCityDetail(ctx, req.IDProvinsi, req.IDKota); err != nil {
 		return "", errors.New("kota tidak valid")
 	}
+
 
 	hash, _ := utils.HashPassword(req.KataSandi)
 
@@ -68,7 +73,7 @@ func (u *authUsecaseImpl) Register(ctx context.Context, req *models.RegisterRequ
 	}
 
 	// wajib create toko
-	_, _ = u.tokoRepo.CreateToko(ctx, &entity.Toko{
+	_, _ = u.tokoRepo.Create(ctx, &entity.Toko{
 		IDUser:   userCreated.ID,
 		NamaToko: userCreated.Nama + "'s Toko",
 	})
@@ -88,17 +93,17 @@ func (u *authUsecaseImpl) Login(ctx context.Context, req *models.LoginRequest) (
 		return nil, errors.New("password salah")
 	}
 
+	prov, herr := u.AddrUsc.GetProvinceDetail(ctx, user.IDProvinsi)
+	if herr != nil {
+		return nil, herr.Err
+	}
+
+	city, herr := u.AddrUsc.GetCityDetail(ctx, user.IDProvinsi, user.IDKota)
+	if herr != nil {
+		return nil, herr.Err
+	}
+
 	token, err := utils.GenerateToken(user.ID, user.IsAdmin)
-	if err != nil {
-		return nil, err
-	}
-
-	prov, err := utils.GetProvince(user.IDProvinsi)
-	if err != nil {
-		return nil, err
-	}
-
-	city, err := utils.GetCity(user.IDProvinsi, user.IDKota)
 	if err != nil {
 		return nil, err
 	}
@@ -122,8 +127,6 @@ func (u *authUsecaseImpl) Login(ctx context.Context, req *models.LoginRequest) (
 		Token: token,
 	}
 
-	// fmt.Printf("PROV FROM EMSIFA: %+v\n", prov)
-	// fmt.Printf("CITY FROM EMSIFA: %+v\n", city)
-
 	return res, nil
 }
+

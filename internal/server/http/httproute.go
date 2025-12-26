@@ -14,4 +14,6 @@ func HttpRouteInit(r *fiber.App, containerConf *container.Container) {
 	rest.AuthRoute(api, containerConf.AuthUsc)
 	rest.UserRoute(api, containerConf.UserUsc)
 	rest.CategoryRoute(api, containerConf.CUsc)
+	rest.AddressRoute(api, containerConf.AddrUsc)
+	rest.TokoRoute(api, containerConf.TokoUsc)
 }

@@ -4,4 +4,4 @@
 
 *.pdf
 
-*.json
+*postman_collection.json

@@ -92,9 +92,9 @@ func (cc *CategoryControllerImpl) Update(ctx *fiber.Ctx) error {
         return helper.BadRequest(ctx, "Invalid request body", err.Error())
     }
 
-	if req.Nama == "" {
-    return helper.BadRequest(ctx, "Nama category tidak boleh kosong", "Invalid request body")
-	}
+	// if req.Nama == "" {
+    // return helper.BadRequest(ctx, "Nama category tidak boleh kosong", "Invalid request body")
+	// }
 
 
 	 if errStruct := cc.cUsc.Update(ctx.Context(), id, req); errStruct != nil {
