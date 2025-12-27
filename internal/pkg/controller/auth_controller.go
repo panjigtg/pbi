@@ -13,17 +13,17 @@ type AuthController interface {
 	Register(ctx *fiber.Ctx) error
 }
 
-type AuthControllerImpl struct {
+type authControllerImpl struct {
 	authUsc authusc.AuthUseCase
 }
 
-func NewAuthController(authUsc authusc.AuthUseCase) *AuthControllerImpl {
-	return &AuthControllerImpl{
+func NewAuthController(authUsc authusc.AuthUseCase) AuthController {
+	return &authControllerImpl{
 		authUsc: authUsc,
 	}
 }
 
-func (uc *AuthControllerImpl) Register(ctx *fiber.Ctx) error {
+func (uc *authControllerImpl) Register(ctx *fiber.Ctx) error {
 	req := new(authmodels.RegisterRequest)
 
 	if err := ctx.BodyParser(req); err != nil {
@@ -50,7 +50,7 @@ func (uc *AuthControllerImpl) Register(ctx *fiber.Ctx) error {
 	)
 }
 
-func (uc *AuthControllerImpl) Login(ctx *fiber.Ctx) error {
+func (uc *authControllerImpl) Login(ctx *fiber.Ctx) error {
 	req := new(authmodels.LoginRequest)
 
 	if err := ctx.BodyParser(req); err != nil {

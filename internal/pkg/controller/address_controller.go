@@ -14,17 +14,17 @@ type AddressController interface {
 	GetCityDetail(ctx *fiber.Ctx) error
 }
 
-type AddressControllerImpl struct {
+type addressControllerImpl struct {
 	uc usecase.AddressUsecase
 }
 
 func NewAddressController(uc usecase.AddressUsecase) AddressController {
-	return &AddressControllerImpl{
+	return &addressControllerImpl{
 		uc: uc,
 	}
 }
 
-func (ac *AddressControllerImpl) GetProvinces(c *fiber.Ctx) error {
+func (ac *addressControllerImpl) GetProvinces(c *fiber.Ctx) error {
 	res, err := ac.uc.GetProvinces(c.Context())
 	if err != nil {
 		return helper.BadRequest(c, "Failed get provinces", err.Err.Error())
@@ -32,7 +32,7 @@ func (ac *AddressControllerImpl) GetProvinces(c *fiber.Ctx) error {
 	return helper.Success(c, "OK", res)
 }
 
-func (ac *AddressControllerImpl) GetCity(c *fiber.Ctx) error {
+func (ac *addressControllerImpl) GetCity(c *fiber.Ctx) error {
 	provinceID := c.Params("province_id")
 
 	res, err := ac.uc.GetCities(c.Context(), provinceID)
@@ -43,7 +43,7 @@ func (ac *AddressControllerImpl) GetCity(c *fiber.Ctx) error {
 	return helper.Success(c, "OK", res)
 }
 
-func (ac *AddressControllerImpl) GetProvinceDetail(c *fiber.Ctx) error {
+func (ac *addressControllerImpl) GetProvinceDetail(c *fiber.Ctx) error {
 	provinceID := c.Params("province_id")
 
 	res, err := ac.uc.GetProvinceDetail(c.Context(), provinceID)
@@ -54,7 +54,7 @@ func (ac *AddressControllerImpl) GetProvinceDetail(c *fiber.Ctx) error {
 	return helper.Success(c, "OK", res)
 }
 
-func (ac *AddressControllerImpl) GetCityDetail(c *fiber.Ctx) error {
+func (ac *addressControllerImpl) GetCityDetail(c *fiber.Ctx) error {
 	provinceID := c.Params("province_id")
 	cityID := c.Params("city_id")
 

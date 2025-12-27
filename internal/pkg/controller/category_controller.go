@@ -10,24 +10,24 @@ import (
 )
 
 type CategoryController interface {
-	CreateCategory(ctx fiber.Ctx) error
-	GetAllCategories(ctx fiber.Ctx) error
-	GetById(ctx fiber.Ctx) error
-	Update(ctx fiber.Ctx) error
+	CreateCategory(ctx *fiber.Ctx) error
+	GetAllCategories(ctx *fiber.Ctx) error
+	GetById(ctx *fiber.Ctx) error
+	Update(ctx *fiber.Ctx) error
 	Delete(ctx *fiber.Ctx) error
 }
 
-type CategoryControllerImpl struct {
+type categoryControllerImpl struct {
 	cUsc usecase.CategoryUseCase
 }
 
-func NewCategoryController(categoryUseCase usecase.CategoryUseCase) *CategoryControllerImpl {
-	return &CategoryControllerImpl{
+func NewCategoryController(categoryUseCase usecase.CategoryUseCase) CategoryController {
+	return &categoryControllerImpl{
 		cUsc: categoryUseCase,
 	}
 }
 
-func (cc *CategoryControllerImpl) CreateCategory(ctx *fiber.Ctx) error {
+func (cc *categoryControllerImpl) CreateCategory(ctx *fiber.Ctx) error {
 	req := new(models.CategoryRequest)
 	if err := ctx.BodyParser(req); err != nil {
 		return helper.BadRequest(
@@ -49,7 +49,7 @@ func (cc *CategoryControllerImpl) CreateCategory(ctx *fiber.Ctx) error {
 	return helper.Success(ctx, "Succeed to POST data", res)
 }
 
-func (cc *CategoryControllerImpl) GetAllCategories(ctx *fiber.Ctx) error {
+func (cc *categoryControllerImpl) GetAllCategories(ctx *fiber.Ctx) error {
 	res, err := cc.cUsc.GetAllCategories(ctx.Context())
 	if err != nil {
 		return helper.BadRequest(
@@ -61,7 +61,7 @@ func (cc *CategoryControllerImpl) GetAllCategories(ctx *fiber.Ctx) error {
 	return helper.Success(ctx, "Succeed to GET data", res)
 }
 
-func (cc *CategoryControllerImpl) GetById(ctx *fiber.Ctx) error {
+func (cc *categoryControllerImpl) GetById(ctx *fiber.Ctx) error {
 
 	idParam := ctx.Params("id")
     id, convErr := strconv.Atoi(idParam)
@@ -80,7 +80,7 @@ func (cc *CategoryControllerImpl) GetById(ctx *fiber.Ctx) error {
 	return helper.Success(ctx, "Succeed to GET data", res)
 }
 
-func (cc *CategoryControllerImpl) Update(ctx *fiber.Ctx) error {
+func (cc *categoryControllerImpl) Update(ctx *fiber.Ctx) error {
 	idParam := ctx.Params("id")
     id, err := strconv.Atoi(idParam)
     if err != nil {
@@ -104,7 +104,7 @@ func (cc *CategoryControllerImpl) Update(ctx *fiber.Ctx) error {
     return helper.Success(ctx, "Category updated successfully", nil)
 }
 
-func (cc *CategoryControllerImpl) Delete(ctx *fiber.Ctx) error {
+func (cc *categoryControllerImpl) Delete(ctx *fiber.Ctx) error {
 	idParam := ctx.Params("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {

@@ -12,6 +12,7 @@ type UserRepository interface {
 	Create(ctx context.Context, user *entity.User) (*entity.User, error)
 	UpdateProfile(ctx context.Context, userID int64, nama *string, notelp *string,email *string, idProvinsi *string, idKota *string, tentang *string, pekerjaan *string, kataSandi *string,tanggalLahir *string, jenisKelamin *string, ) error
 	FindById(ctx context.Context, userID int64) (*entity.User, error)
+	GetProfile(ctx context.Context, userID int64) (*entity.User, error)
 }
 
 type userRepositoryImpl struct {
@@ -175,4 +176,8 @@ func (r *userRepositoryImpl) FindById(ctx context.Context, userID int64,) (*enti
 	}
 
 	return u, nil
+}
+
+func (r *userRepositoryImpl) GetProfile(ctx context.Context,userID int64,) (*entity.User, error) {
+	return r.FindById(ctx, userID)
 }

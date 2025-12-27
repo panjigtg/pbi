@@ -18,6 +18,7 @@ type Container struct {
 	CUsc 	usecase.CategoryUseCase
 	AddrUsc usecase.AddressUsecase
 	TokoUsc usecase.TokoUsecase
+	DestUsc usecase.DestinationUsecase
 }
 
 func InitContainer() *Container {
@@ -37,17 +38,19 @@ func InitContainer() *Container {
 	}
 
 	// repositories
-	userRepo := repository.NewUserRepository(database.Raw)
-	tokoRepo := repository.NewTokoRepository(database.Raw)
-	categoryRepo := repository.NewCategoryRepository(database.Raw)
-	addressRepo := repository.NewAddressRepository()
+	userRepo 			:= repository.NewUserRepository(database.Raw)
+	tokoRepo			:= repository.NewTokoRepository(database.Raw)
+	categoryRepo 		:= repository.NewCategoryRepository(database.Raw)
+	addressRepo 		:= repository.NewAddressRepository()
+	destinationRepo 	:= repository.NewDestinationRepo(database.Gorm)
 
 	// usecases
-	addressUsc := usecase.NewAddressUsecase(addressRepo)
-	authUsc := usecase.NewAuthUseCase(userRepo, tokoRepo, addressUsc)
-	userUsc := usecase.NewUserUseCase(userRepo)
-	categoryUsc := usecase.NewCategoryUseCase(categoryRepo)
-	tokoUsc := usecase.NewTokoUsecase(tokoRepo)
+	addressUsc 			:= usecase.NewAddressUsecase(addressRepo)
+	authUsc 			:= usecase.NewAuthUseCase(userRepo, tokoRepo, addressUsc)
+	userUsc 			:= usecase.NewUserUseCase(userRepo, addressUsc)
+	categoryUsc 		:= usecase.NewCategoryUseCase(categoryRepo)
+	tokoUsc 			:= usecase.NewTokoUsecase(tokoRepo)
+	destUsc				:= usecase.NewDestinationUsecase(destinationRepo)
 
 
 	return &Container{
@@ -58,5 +61,6 @@ func InitContainer() *Container {
 		CUsc:    categoryUsc,
 		AddrUsc: addressUsc,
 		TokoUsc: tokoUsc,
+		DestUsc: destUsc,
 	}
 }

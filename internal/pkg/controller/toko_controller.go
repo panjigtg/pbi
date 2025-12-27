@@ -17,17 +17,17 @@ type TokoController interface {
 	Update(ctx *fiber.Ctx) error
 }
 
-type TokoControllerImpl struct {
+type tokoControllerImpl struct {
 	TokoUsc usecase.TokoUsecase
 }
 
-func NewTokoController(tokoUsc usecase.TokoUsecase) *TokoControllerImpl {
-	return &TokoControllerImpl{
+func NewTokoController(tokoUsc usecase.TokoUsecase) TokoController {
+	return &tokoControllerImpl{
 		TokoUsc: tokoUsc,
 	}
 }
 
-func (tc *TokoControllerImpl) GetAll(ctx *fiber.Ctx) error {
+func (tc *tokoControllerImpl) GetAll(ctx *fiber.Ctx) error {
 	page := ctx.QueryInt("page", 1)
 	limit := ctx.QueryInt("limit", 10)
 
@@ -62,7 +62,7 @@ func (tc *TokoControllerImpl) GetAll(ctx *fiber.Ctx) error {
 	)
 }
 
-func (tc *TokoControllerImpl) GetMy(ctx *fiber.Ctx) error {
+func (tc *tokoControllerImpl) GetMy(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {
 		return helper.BadRequest(
@@ -101,7 +101,7 @@ func (tc *TokoControllerImpl) GetMy(ctx *fiber.Ctx) error {
 	)
 }
 
-func (tc *TokoControllerImpl) GetByID(ctx *fiber.Ctx) error {
+func (tc *tokoControllerImpl) GetByID(ctx *fiber.Ctx) error {
 	tokoID := ctx.Params("id")
 	if tokoID == "" {
 		return helper.BadRequest(ctx, "Failed to GET data", "Toko ID is required")
@@ -123,7 +123,7 @@ func (tc *TokoControllerImpl) GetByID(ctx *fiber.Ctx) error {
 }
 
 
-func (tc *TokoControllerImpl) Update(ctx *fiber.Ctx) error {
+func (tc *tokoControllerImpl) Update(ctx *fiber.Ctx) error {
 	tokoID := ctx.Params("id")
 	if tokoID == "" {
 		return helper.BadRequest(ctx, "Failed to UPDATE data", "Toko ID is required")

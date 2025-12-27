@@ -10,24 +10,25 @@ import (
 
 type UserController interface {
 	UpdateProfile(ctx *fiber.Ctx) error
+	GetProfile(ctx *fiber.Ctx) error
 }
 
-type UserControllerImpl struct {
+type userControllerImpl struct {
 	UsrUsc usecase.UserUseCase
 }
 
-func NewUserController(usrUsc usecase.UserUseCase) *UserControllerImpl {
-	return &UserControllerImpl{
+func NewUserController(usrUsc usecase.UserUseCase) UserController {
+	return &userControllerImpl{
 		UsrUsc: usrUsc,
 	}
 }
 
-func (uc *UserControllerImpl) UpdateProfile(ctx *fiber.Ctx) error {
+func (uc *userControllerImpl) UpdateProfile(ctx *fiber.Ctx) error {
 	req := new(models.UpdateProfileRequest)
 	if err := ctx.BodyParser(req); err != nil {
 		return helper.BadRequest(
 			ctx,
-			"Failed to POST data",
+			"Failed to UPDATE data",
 			"Invalid request body",
 		)
 	}
@@ -36,23 +37,58 @@ func (uc *UserControllerImpl) UpdateProfile(ctx *fiber.Ctx) error {
 	if !ok {
 		return helper.BadRequest(
 			ctx,
-			"Failed to POST data",
+			"Failed to UPDATE data",
 			"User ID not found",
 		)
 	}
 
-	res, err := uc.UsrUsc.UpdateProfile(ctx.Context(), int64(userID), req)
-	if err != nil {
-		return helper.BadRequest(
+	res, herr := uc.UsrUsc.UpdateProfile(
+		ctx.Context(),
+		int64(userID),
+		req,
+	)
+	if herr != nil {
+		return helper.Error(
 			ctx,
-			"Failed to POST data",
-			err.Error(),
+			herr.Code,        
+			"Failed to UPDATE data",
+			herr.Err.Error(), 
 		)
 	}
 
 	return helper.Success(
 		ctx,
-		"Succeed to POST data",
+		"Succeed to UPDATE data",
+		res,
+	)
+}
+
+func (uc *userControllerImpl) GetProfile(ctx *fiber.Ctx) error {
+	userID, ok := ctx.Locals("user_id").(int)
+	if !ok {
+		return helper.BadRequest(
+			ctx,
+			"Failed to GET data",
+			"User ID not found",
+		)
+	}
+
+	res, herr := uc.UsrUsc.GetProfile(
+		ctx.Context(),
+		int64(userID),
+	)
+	if herr != nil {
+		return helper.Error(
+			ctx,
+			herr.Code,
+			"Failed to GET data",
+			herr.Err.Error(),
+		)
+	}
+
+	return helper.Success(
+		ctx,
+		"Succeed to GET data",
 		res,
 	)
 }
