@@ -3,7 +3,7 @@ package entity
 import "time"
 
 type Toko struct {
-	ID       int
+	ID       int		`gorm:"primaryKey"`
 	IDUser   int
 	NamaToko string
 	UrlFoto  string

@@ -17,4 +17,5 @@ func HttpRouteInit(r *fiber.App, containerConf *container.Container) {
 	rest.AddressRoute(api, containerConf.AddrUsc)
 	rest.TokoRoute(api, containerConf.TokoUsc)
 	rest.DestinationRoute(api, containerConf.DestUsc)
+	rest.ProductRoute(api, containerConf.PUsc)
 }

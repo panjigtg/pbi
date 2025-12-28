@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"errors"
 
+	"pbi/internal/pkg/repository"
+	"pbi/internal/pkg/usecase"
 	"pbi/internal/pkg/entity"
 	"pbi/internal/utils"
 )
@@ -15,20 +17,12 @@ func SeedAdmin(db *sql.DB) error {
 	provinceID := "31" 
 	cityID := "3171"    
 
-	ok, err := utils.ValidateProvince(provinceID)
-	if err != nil {
-		return err
-	}
-	if !ok {
-		return errors.New("invalid province id")
-	}
+	addrRepo := repository.NewAddressRepository()
+	addrUsc := usecase.NewAddressUsecase(addrRepo)
 
-	ok, err = utils.ValidateCity(provinceID, cityID)
-	if err != nil {
-		return err
-	}
-	if !ok {
-		return errors.New("invalid city id")
+	// VALIDASI PROVINCE & CITY
+	if herr := addrUsc.ValidateRegion(ctx, provinceID, cityID); herr != nil {
+		return errors.New(herr.Err.Error())
 	}
 
 	hashedPassword, err := utils.HashPassword("admin123")

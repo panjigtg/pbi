@@ -19,6 +19,7 @@ type Container struct {
 	AddrUsc usecase.AddressUsecase
 	TokoUsc usecase.TokoUsecase
 	DestUsc usecase.DestinationUsecase
+	PUsc	usecase.ProductUsecase
 }
 
 func InitContainer() *Container {
@@ -43,6 +44,7 @@ func InitContainer() *Container {
 	categoryRepo 		:= repository.NewCategoryRepository(database.Raw)
 	addressRepo 		:= repository.NewAddressRepository()
 	destinationRepo 	:= repository.NewDestinationRepo(database.Gorm)
+	productRepo			:= repository.NewProductRepository(database.Gorm)
 
 	// usecases
 	addressUsc 			:= usecase.NewAddressUsecase(addressRepo)
@@ -51,6 +53,7 @@ func InitContainer() *Container {
 	categoryUsc 		:= usecase.NewCategoryUseCase(categoryRepo)
 	tokoUsc 			:= usecase.NewTokoUsecase(tokoRepo)
 	destUsc				:= usecase.NewDestinationUsecase(destinationRepo)
+	PUsc				:= usecase.NewProductUsecase(database.Gorm, productRepo)
 
 
 	return &Container{
@@ -62,5 +65,6 @@ func InitContainer() *Container {
 		AddrUsc: addressUsc,
 		TokoUsc: tokoUsc,
 		DestUsc: destUsc,
+		PUsc: PUsc,
 	}
 }

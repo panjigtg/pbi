@@ -1,3 +1,3 @@
-ALTER TABLE user
-ADD UNIQUE INDEX ux_user_email (email),
-ADD UNIQUE INDEX ux_user_notelp (notelp);
+ALTER TABLE produk 
+MODIFY harga_reseller DECIMAL(15,2) NOT NULL,
+MODIFY harga_konsumen DECIMAL(15,2) NOT NULL;
