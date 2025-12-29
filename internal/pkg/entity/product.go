@@ -24,7 +24,7 @@ type Produk struct {
 type ProductPhoto struct {
 	ID        int    `gorm:"column:id;primaryKey;autoIncrement"`
 	ProductID int    `gorm:"column:id_produk;not null"`
-	Url       string `gorm:"column:url;type:varchar(255)"`
+	Url       string `gorm:"column:url;type:varchar(255)" json:"url"`
 	CreatedAt time.Time `gorm:"column:created_at;autoCreateTime"`
 	UpdatedAt time.Time `gorm:"column:updated_at;autoUpdateTime"`
 }

@@ -24,6 +24,7 @@ func NewAddressController(uc usecase.AddressUsecase) AddressController {
 	}
 }
 
+
 func (ac *addressControllerImpl) GetProvinces(c *fiber.Ctx) error {
 	res, err := ac.uc.GetProvinces(c.Context())
 	if err != nil {
