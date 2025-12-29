@@ -31,14 +31,14 @@ func NewTransactionController(trxUsc usecase.TransactionUsecase) TransactionCont
 // @Tags         Transactions
 // @Accept       json
 // @Produce      json
-// @Param        request body models.CreateTrxRequest true "Transaction Request"
-// @Success      200 {object} helper.Response{data=int} "Transaction created successfully"
-// @Failure      400 {object} helper.Response "Bad Request"
-// @Failure      401 {object} helper.Response "Unauthorized"
-// @Failure      404 {object} helper.Response "Alamat pengiriman tidak valid"
-// @Failure      500 {object} helper.Response "Internal Server Error"
+// @Param        request body object true "Transaction Request"
+// @Success      200 {object} object "Transaction created successfully"
+// @Failure      400 {object} object "Bad Request"
+// @Failure      401 {object} object "Unauthorized"
+// @Failure      404 {object} object "Alamat pengiriman tidak valid"
+// @Failure      500 {object} object "Internal Server Error"
 // @Security     BearerAuth
-// @Router       /transactions [post]
+// @Router       /trx/ [post]
 func (c *transactionImpl) Create(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {
@@ -64,11 +64,11 @@ func (c *transactionImpl) Create(ctx *fiber.Ctx) error {
 // @Tags         Transactions
 // @Accept       json
 // @Produce      json
-// @Success      200 {object} helper.Response{data=models.TransactionListResponseWrapper} "Success get all transactions"
-// @Failure      401 {object} helper.Response "Unauthorized"
-// @Failure      500 {object} helper.Response "Internal Server Error"
+// @Success      200 {object} object "Success get all transactions"
+// @Failure      401 {object} object "Unauthorized"
+// @Failure      500 {object} object "Internal Server Error"
 // @Security     BearerAuth
-// @Router       /transactions [get]
+// @Router       /trx/ [get]
 func (c *transactionImpl) GetAll(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {
@@ -90,13 +90,13 @@ func (c *transactionImpl) GetAll(ctx *fiber.Ctx) error {
 // @Accept       json
 // @Produce      json
 // @Param        id path int true "Transaction ID"
-// @Success      200 {object} helper.Response{data=models.TransactionDetailByIDResponse} "Success get transaction detail"
-// @Failure      400 {object} helper.Response "Invalid transaction ID"
-// @Failure      401 {object} helper.Response "Unauthorized"
-// @Failure      404 {object} helper.Response "Transaction not found"
-// @Failure      500 {object} helper.Response "Internal Server Error"
+// @Success      200 {object} object "Success get transaction detail"
+// @Failure      400 {object} object "Invalid transaction ID"
+// @Failure      401 {object} object "Unauthorized"
+// @Failure      404 {object} object "Transaction not found"
+// @Failure      500 {object} object "Internal Server Error"
 // @Security     BearerAuth
-// @Router       /transactions/{id} [get]
+// @Router       /trx/{id} [get]
 func (c *transactionImpl) GetByID(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {

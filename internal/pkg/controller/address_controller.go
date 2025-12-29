@@ -24,7 +24,16 @@ func NewAddressController(uc usecase.AddressUsecase) AddressController {
 	}
 }
 
-
+// GetProvinces godoc
+// @Summary      Get All Provinces
+// @Description  Get list of all provinces in Indonesia
+// @Tags         Address
+// @Accept       json
+// @Produce      json
+// @Success      200 {object} object "Success get provinces"
+// @Failure      400 {object} object "Bad Request"
+// @Failure      500 {object} object "Internal Server Error"
+// @Router       /provcity/listprovincies [get]
 func (ac *addressControllerImpl) GetProvinces(c *fiber.Ctx) error {
 	res, err := ac.uc.GetProvinces(c.Context())
 	if err != nil {
@@ -33,6 +42,17 @@ func (ac *addressControllerImpl) GetProvinces(c *fiber.Ctx) error {
 	return helper.Success(c, "OK", res)
 }
 
+// GetCity godoc
+// @Summary      Get Cities by Province
+// @Description  Get list of cities in a specific province
+// @Tags         Address
+// @Accept       json
+// @Produce      json
+// @Param        province_id path string true "Province ID"
+// @Success      200 {object} object "Success get cities"
+// @Failure      400 {object} object "Bad Request"
+// @Failure      500 {object} object "Internal Server Error"
+// @Router       /provcity/listcities/{province_id} [get]
 func (ac *addressControllerImpl) GetCity(c *fiber.Ctx) error {
 	provinceID := c.Params("province_id")
 
@@ -44,6 +64,18 @@ func (ac *addressControllerImpl) GetCity(c *fiber.Ctx) error {
 	return helper.Success(c, "OK", res)
 }
 
+// GetProvinceDetail godoc
+// @Summary      Get Province Detail
+// @Description  Get detailed information of a specific province
+// @Tags         Address
+// @Accept       json
+// @Produce      json
+// @Param        province_id path string true "Province ID"
+// @Success      200 {object} object "Success get province detail"
+// @Failure      400 {object} object "Bad Request"
+// @Failure      404 {object} object "Province not found"
+// @Failure      500 {object} object "Internal Server Error"
+// @Router       /provcity/detailprovince/{province_id} [get]
 func (ac *addressControllerImpl) GetProvinceDetail(c *fiber.Ctx) error {
 	provinceID := c.Params("province_id")
 
@@ -55,6 +87,19 @@ func (ac *addressControllerImpl) GetProvinceDetail(c *fiber.Ctx) error {
 	return helper.Success(c, "OK", res)
 }
 
+// GetCityDetail godoc
+// @Summary      Get City Detail
+// @Description  Get detailed information of a specific city
+// @Tags         Address
+// @Accept       json
+// @Produce      json
+// @Param        province_id path string true "Province ID"
+// @Param        city_id path string true "City ID"
+// @Success      200 {object} object "Success get city detail"
+// @Failure      400 {object} object "Bad Request"
+// @Failure      404 {object} object "City not found"
+// @Failure      500 {object} object "Internal Server Error"
+// @Router       /provcity/detailcity/{province_id}/cities/{city_id} [get]
 func (ac *addressControllerImpl) GetCityDetail(c *fiber.Ctx) error {
 	provinceID := c.Params("province_id")
 	cityID := c.Params("city_id")

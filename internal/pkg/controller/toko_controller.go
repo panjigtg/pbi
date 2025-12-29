@@ -27,6 +27,17 @@ func NewTokoController(tokoUsc usecase.TokoUsecase) TokoController {
 	}
 }
 
+// GetAll godoc
+// @Summary     Get all toko
+// @Description Get list of all toko (public)
+// @Tags        Toko
+// @Produce     json
+// @Param       page  query int false "Page number"
+// @Param       limit query int false "Limit per page"
+// @Success     200 {object} object "Success get toko list"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /toko [get]
 func (tc *tokoControllerImpl) GetAll(ctx *fiber.Ctx) error {
 	page := ctx.QueryInt("page", 1)
 	limit := ctx.QueryInt("limit", 10)
@@ -62,6 +73,17 @@ func (tc *tokoControllerImpl) GetAll(ctx *fiber.Ctx) error {
 	)
 }
 
+// GetMy godoc
+// @Summary     Get my toko
+// @Description Get toko owned by authenticated user
+// @Tags        Toko
+// @Produce     json
+// @Security    BearerAuth
+// @Success     200 {object} object "Success get my toko"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /toko/my [get]
 func (tc *tokoControllerImpl) GetMy(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {
@@ -101,6 +123,17 @@ func (tc *tokoControllerImpl) GetMy(ctx *fiber.Ctx) error {
 	)
 }
 
+// GetByID godoc
+// @Summary     Get toko by ID
+// @Description Get detail toko by ID
+// @Tags        Toko
+// @Produce     json
+// @Param       id path int true "Toko ID"
+// @Success     200 {object} object "Success get toko detail"
+// @Failure     400 {object} object "Invalid toko ID"
+// @Failure     404 {object} object "Toko not found"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /toko/{id} [get]
 func (tc *tokoControllerImpl) GetByID(ctx *fiber.Ctx) error {
 	tokoID := ctx.Params("id")
 	if tokoID == "" {
@@ -123,6 +156,23 @@ func (tc *tokoControllerImpl) GetByID(ctx *fiber.Ctx) error {
 }
 
 
+// Update godoc
+// @Summary     Update toko
+// @Description Update toko data (owner only)
+// @Tags        Toko
+// @Accept      multipart/form-data
+// @Produce     json
+// @Security    BearerAuth
+// @Param       id        path     int    true  "Toko ID"
+// @Param       nama_toko formData string false "Nama toko"
+// @Param       url_foto  formData file   false "Foto toko"
+// @Success     200 {object} object "Success update toko"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     403 {object} object "Forbidden"
+// @Failure     404 {object} object "Toko not found"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /toko/{id} [put]
 func (tc *tokoControllerImpl) Update(ctx *fiber.Ctx) error {
 	tokoID := ctx.Params("id")
 	if tokoID == "" {

@@ -28,6 +28,26 @@ func NewProductController(uc usecase.ProductUsecase) ProductController {
 	}
 }
 
+// CreateProduct godoc
+// @Summary     Create product
+// @Description Create new product with images (multipart/form-data)
+// @Tags        Product
+// @Accept      multipart/form-data
+// @Produce     json
+// @Security    BearerAuth
+// @Param       nama_produk      formData string true  "Product name"
+// @Param       slug             formData string true  "Product slug"
+// @Param       deskripsi        formData string true  "Product description"
+// @Param       id_category      formData int    true  "Category ID"
+// @Param       harga_reseller   formData number true  "Reseller price"
+// @Param       harga_konsumen   formData number true  "Consumer price"
+// @Param       stok             formData int    true  "Stock"
+// @Param       photos           formData file   false "Product images (multiple)"
+// @Success     200 {object} object "Success create product"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /product [post]
 func (c *productImpl) Create(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {
@@ -87,6 +107,28 @@ func (c *productImpl) Create(ctx *fiber.Ctx) error {
 	return helper.Success(ctx, "Succeed to POST data", strconv.Itoa(id))
 }
 
+// UpdateProduct godoc
+// @Summary     Update product
+// @Description Update product by ID (multipart/form-data)
+// @Tags        Product
+// @Accept      multipart/form-data
+// @Produce     json
+// @Security    BearerAuth
+// @Param       id               path     int    true  "Product ID"
+// @Param       nama_produk      formData string false "Product name"
+// @Param       slug             formData string false "Product slug"
+// @Param       deskripsi        formData string false "Product description"
+// @Param       id_category      formData int    false "Category ID"
+// @Param       harga_reseller   formData number false "Reseller price"
+// @Param       harga_konsumen   formData number false "Consumer price"
+// @Param       stok             formData int    false "Stock"
+// @Param       photos           formData file   false "Product images (multiple)"
+// @Success     200 {object} object "Success update product"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     404 {object} object "Product not found"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /product/{id} [put]
 func (c *productImpl) Update(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {
@@ -149,6 +191,19 @@ func (c *productImpl) Update(ctx *fiber.Ctx) error {
 	return helper.Success(ctx, "Succeed to UPDATE data", nil)
 }
 
+// DeleteProduct godoc
+// @Summary     Delete product
+// @Description Delete product by ID
+// @Tags        Product
+// @Produce     json
+// @Security    BearerAuth
+// @Param       id path int true "Product ID"
+// @Success     200 {object} object "Success delete product"
+// @Failure     400 {object} object "Invalid product ID"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     404 {object} object "Product not found"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /product/{id} [delete]
 func (c *productImpl) Delete(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {
@@ -167,6 +222,22 @@ func (c *productImpl) Delete(ctx *fiber.Ctx) error {
 	return helper.Success(ctx, "Succeed to DELETE data", nil)
 }
 
+// GetAllProducts godoc
+// @Summary     Get all products
+// @Description Get product list with filters & pagination
+// @Tags        Product
+// @Produce     json
+// @Param       nama_produk query string false "Product name"
+// @Param       category_id query int    false "Category ID"
+// @Param       toko_id     query int    false "Toko ID"
+// @Param       min_harga   query number false "Minimum price"
+// @Param       max_harga   query number false "Maximum price"
+// @Param       page        query int    false "Page number"
+// @Param       limit       query int    false "Limit per page"
+// @Success     200 {object} object "Success get product list"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /product [get]
 func (c *productImpl) GetAll(ctx *fiber.Ctx) error {
 	// Parse query parameters
 	filter := &entity.ProductFilter{
@@ -230,6 +301,17 @@ func (c *productImpl) GetAll(ctx *fiber.Ctx) error {
 	return helper.Success(ctx, "Succeed to GET data", result)
 }
 
+// GetProductByID godoc
+// @Summary     Get product by ID
+// @Description Get product detail
+// @Tags        Product
+// @Produce     json
+// @Param       id path int true "Product ID"
+// @Success     200 {object} object "Success get product detail"
+// @Failure     400 {object} object "Invalid product ID"
+// @Failure     404 {object} object "Product not found"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /product/{id} [get]
 func (c *productImpl) GetByID(ctx *fiber.Ctx) error {
 	// Parse product_id from params
 	id, err := strconv.Atoi(ctx.Params("id"))

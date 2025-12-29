@@ -27,6 +27,19 @@ func NewDestinationController(Usc usecase.DestinationUsecase) DestinationControl
 	}
 }
 
+// CreateDestination godoc
+// @Summary     Create destination address
+// @Description Create new destination address for logged-in user
+// @Tags        Destination
+// @Accept      json
+// @Produce     json
+// @Security    BearerAuth
+// @Param       body body models.DestinationCreateRequest true "Destination payload"
+// @Success     200 {object} object "Success create destination"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /user/alamat [post]
 func(dc *destinationImpl) Create(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {
@@ -67,6 +80,21 @@ func(dc *destinationImpl) Create(ctx *fiber.Ctx) error {
 	return helper.Success(ctx, "Succeed to CREATE data", res)
 }
 
+// UpdateDestination godoc
+// @Summary     Update destination
+// @Description Update destination address by ID (owned by user)
+// @Tags        Destination
+// @Accept      json
+// @Produce     json
+// @Security    BearerAuth
+// @Param       id path int true "Destination ID"
+// @Param       body body models.DestinationUpdateRequest true "Update payload"
+// @Success     200 {object} object "Success update destination"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     404 {object} object "Destination not found"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /user/alamat/{id} [put]
 func (dc *destinationImpl) Update(ctx *fiber.Ctx) error {
 	// ambil user dari JWT
 	userID, ok := ctx.Locals("user_id").(int)
@@ -107,6 +135,19 @@ func (dc *destinationImpl) Update(ctx *fiber.Ctx) error {
 	return helper.Success(ctx, "Succeed to UPDATE data", res)
 }
 
+// DeleteDestination godoc
+// @Summary     Delete destination
+// @Description Delete destination address by ID (owned by user)
+// @Tags        Destination
+// @Produce     json
+// @Security    BearerAuth
+// @Param       id path int true "Destination ID"
+// @Success     200 {object} object "Success delete destination"
+// @Failure     400 {object} object "Invalid destination ID"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     404 {object} object "Destination not found"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /user/alamat/{id} [delete]
 func (dc *destinationImpl) Delete(ctx *fiber.Ctx) error {
 	// ambil user dari JWT
 	userID, ok := ctx.Locals("user_id").(int)
@@ -134,6 +175,16 @@ func (dc *destinationImpl) Delete(ctx *fiber.Ctx) error {
 	return helper.Success(ctx, "Succeed to DELETE data", nil)
 }
 
+// GetAllDestinations godoc
+// @Summary     Get all destinations
+// @Description Get all destination addresses owned by logged-in user
+// @Tags        Destination
+// @Produce     json
+// @Security    BearerAuth
+// @Success     200 {object} object "Success get destination list"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /user/alamat [get]
 func (dc *destinationImpl) GetAll(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {
@@ -148,6 +199,19 @@ func (dc *destinationImpl) GetAll(ctx *fiber.Ctx) error {
 	return helper.Success(ctx, "Succeed to GET data", res)
 }
 
+// GetDestinationByID godoc
+// @Summary     Get destination by ID
+// @Description Get destination address detail by ID (owned by user)
+// @Tags        Destination
+// @Produce     json
+// @Security    BearerAuth
+// @Param       id path int true "Destination ID"
+// @Success     200 {object} object "Success get destination detail"
+// @Failure     400 {object} object "Invalid destination ID"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     404 {object} object "Destination not found"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /user/alamat/{id} [get]
 func (dc *destinationImpl) GetByID(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {

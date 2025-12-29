@@ -1,4 +1,1190 @@
+basePath: /api/v1
+definitions:
+  models.CategoryRequest:
+    properties:
+      nama_category:
+        type: string
+    type: object
+  models.DestinationCreateRequest:
+    properties:
+      detail_alamat:
+        type: string
+      judul_alamat:
+        type: string
+      nama_penerima:
+        type: string
+      no_telp:
+        type: string
+    required:
+    - detail_alamat
+    - judul_alamat
+    - nama_penerima
+    - no_telp
+    type: object
+  models.DestinationUpdateRequest:
+    properties:
+      detail_alamat:
+        type: string
+      nama_penerima:
+        type: string
+      no_telp:
+        type: string
+    type: object
+  models.RegisterRequest:
+    properties:
+      email:
+        type: string
+      id_kota:
+        type: string
+      id_provinsi:
+        type: string
+      jenis_kelamin:
+        type: string
+      kata_sandi:
+        type: string
+      nama:
+        type: string
+      notelp:
+        type: string
+      pekerjaan:
+        type: string
+      tanggal_lahir:
+        description: YYYY-MM-DD
+        type: string
+      tentang:
+        type: string
+    type: object
+  models.UpdateRequest:
+    properties:
+      nama_category:
+        type: string
+    type: object
+host: localhost:3000
 info:
-  contact: {}
-paths: {}
+  contact:
+    email: support@example.com
+    name: API Support
+  description: PBI API Documentation
+  termsOfService: http://swagger.io/terms/
+  title: PBI API
+  version: "1.0"
+paths:
+  /auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Login using email and password
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success login
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Invalid email or password
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Login user
+      tags:
+      - Auth
+  /auth/register:
+    post:
+      consumes:
+      - application/json
+      description: Create new user account
+      parameters:
+      - description: Register payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success register user
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "409":
+          description: Email already exists
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Register user
+      tags:
+      - Auth
+  /category:
+    get:
+      description: Get list of categories (Admin only)
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get category list
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all categories
+      tags:
+      - Category
+    post:
+      consumes:
+      - application/json
+      description: Create new category (Admin only)
+      parameters:
+      - description: Category payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.CategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success create category
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create category
+      tags:
+      - Category
+  /category/{id}:
+    delete:
+      description: Delete category by ID (Admin only)
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success delete category
+          schema:
+            type: object
+        "400":
+          description: Invalid ID
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            type: object
+        "404":
+          description: Category not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete category
+      tags:
+      - Category
+    get:
+      description: Get category detail (Admin only)
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get category detail
+          schema:
+            type: object
+        "400":
+          description: Invalid ID
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            type: object
+        "404":
+          description: Category not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get category by ID
+      tags:
+      - Category
+    put:
+      consumes:
+      - application/json
+      description: Update category by ID (Admin only)
+      parameters:
+      - description: Category ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success update category
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            type: object
+        "404":
+          description: Category not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update category
+      tags:
+      - Category
+  /product:
+    get:
+      description: Get product list with filters & pagination
+      parameters:
+      - description: Product name
+        in: query
+        name: nama_produk
+        type: string
+      - description: Category ID
+        in: query
+        name: category_id
+        type: integer
+      - description: Toko ID
+        in: query
+        name: toko_id
+        type: integer
+      - description: Minimum price
+        in: query
+        name: min_harga
+        type: number
+      - description: Maximum price
+        in: query
+        name: max_harga
+        type: number
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Limit per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get product list
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Get all products
+      tags:
+      - Product
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create new product with images (multipart/form-data)
+      parameters:
+      - description: Product name
+        in: formData
+        name: nama_produk
+        required: true
+        type: string
+      - description: Product slug
+        in: formData
+        name: slug
+        required: true
+        type: string
+      - description: Product description
+        in: formData
+        name: deskripsi
+        required: true
+        type: string
+      - description: Category ID
+        in: formData
+        name: id_category
+        required: true
+        type: integer
+      - description: Reseller price
+        in: formData
+        name: harga_reseller
+        required: true
+        type: number
+      - description: Consumer price
+        in: formData
+        name: harga_konsumen
+        required: true
+        type: number
+      - description: Stock
+        in: formData
+        name: stok
+        required: true
+        type: integer
+      - description: Product images (multiple)
+        in: formData
+        name: photos
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success create product
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create product
+      tags:
+      - Product
+  /product/{id}:
+    delete:
+      description: Delete product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success delete product
+          schema:
+            type: object
+        "400":
+          description: Invalid product ID
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Product not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete product
+      tags:
+      - Product
+    get:
+      description: Get product detail
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get product detail
+          schema:
+            type: object
+        "400":
+          description: Invalid product ID
+          schema:
+            type: object
+        "404":
+          description: Product not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Get product by ID
+      tags:
+      - Product
+    put:
+      consumes:
+      - multipart/form-data
+      description: Update product by ID (multipart/form-data)
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product name
+        in: formData
+        name: nama_produk
+        type: string
+      - description: Product slug
+        in: formData
+        name: slug
+        type: string
+      - description: Product description
+        in: formData
+        name: deskripsi
+        type: string
+      - description: Category ID
+        in: formData
+        name: id_category
+        type: integer
+      - description: Reseller price
+        in: formData
+        name: harga_reseller
+        type: number
+      - description: Consumer price
+        in: formData
+        name: harga_konsumen
+        type: number
+      - description: Stock
+        in: formData
+        name: stok
+        type: integer
+      - description: Product images (multiple)
+        in: formData
+        name: photos
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success update product
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Product not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update product
+      tags:
+      - Product
+  /provcity/detailcity/{province_id}/cities/{city_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get detailed information of a specific city
+      parameters:
+      - description: Province ID
+        in: path
+        name: province_id
+        required: true
+        type: string
+      - description: City ID
+        in: path
+        name: city_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get city detail
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "404":
+          description: City not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Get City Detail
+      tags:
+      - Address
+  /provcity/detailprovince/{province_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get detailed information of a specific province
+      parameters:
+      - description: Province ID
+        in: path
+        name: province_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get province detail
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "404":
+          description: Province not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Get Province Detail
+      tags:
+      - Address
+  /provcity/listcities/{province_id}:
+    get:
+      consumes:
+      - application/json
+      description: Get list of cities in a specific province
+      parameters:
+      - description: Province ID
+        in: path
+        name: province_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get cities
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Get Cities by Province
+      tags:
+      - Address
+  /provcity/listprovincies:
+    get:
+      consumes:
+      - application/json
+      description: Get list of all provinces in Indonesia
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get provinces
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Get All Provinces
+      tags:
+      - Address
+  /toko:
+    get:
+      description: Get list of all toko (public)
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Limit per page
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get toko list
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Get all toko
+      tags:
+      - Toko
+  /toko/{id}:
+    get:
+      description: Get detail toko by ID
+      parameters:
+      - description: Toko ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get toko detail
+          schema:
+            type: object
+        "400":
+          description: Invalid toko ID
+          schema:
+            type: object
+        "404":
+          description: Toko not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: Get toko by ID
+      tags:
+      - Toko
+    put:
+      consumes:
+      - multipart/form-data
+      description: Update toko data (owner only)
+      parameters:
+      - description: Toko ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Nama toko
+        in: formData
+        name: nama_toko
+        type: string
+      - description: Foto toko
+        in: formData
+        name: url_foto
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success update toko
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            type: object
+        "404":
+          description: Toko not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update toko
+      tags:
+      - Toko
+  /toko/my:
+    get:
+      description: Get toko owned by authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get my toko
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get my toko
+      tags:
+      - Toko
+  /trx/:
+    get:
+      consumes:
+      - application/json
+      description: Get all transactions for authenticated user with full details
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get all transactions
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get All Transactions
+      tags:
+      - Transactions
+    post:
+      consumes:
+      - application/json
+      description: Create a new transaction with multiple products
+      parameters:
+      - description: Transaction Request
+        in: body
+        name: request
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction created successfully
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Alamat pengiriman tidak valid
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create Transaction
+      tags:
+      - Transactions
+  /trx/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get detailed transaction information by transaction ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get transaction detail
+          schema:
+            type: object
+        "400":
+          description: Invalid transaction ID
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Transaction not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get Transaction by ID
+      tags:
+      - Transactions
+  /user/alamat:
+    get:
+      description: Get all destination addresses owned by logged-in user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get destination list
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get all destinations
+      tags:
+      - Destination
+    post:
+      consumes:
+      - application/json
+      description: Create new destination address for logged-in user
+      parameters:
+      - description: Destination payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.DestinationCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success create destination
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Create destination address
+      tags:
+      - Destination
+  /user/alamat/{id}:
+    delete:
+      description: Delete destination address by ID (owned by user)
+      parameters:
+      - description: Destination ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success delete destination
+          schema:
+            type: object
+        "400":
+          description: Invalid destination ID
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Destination not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Delete destination
+      tags:
+      - Destination
+    get:
+      description: Get destination address detail by ID (owned by user)
+      parameters:
+      - description: Destination ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get destination detail
+          schema:
+            type: object
+        "400":
+          description: Invalid destination ID
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Destination not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get destination by ID
+      tags:
+      - Destination
+    put:
+      consumes:
+      - application/json
+      description: Update destination address by ID (owned by user)
+      parameters:
+      - description: Destination ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update payload
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/models.DestinationUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success update destination
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "404":
+          description: Destination not found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update destination
+      tags:
+      - Destination
+  /user/profile:
+    get:
+      description: Get authenticated user profile
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success get profile
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Get user profile
+      tags:
+      - User
+    put:
+      consumes:
+      - application/json
+      description: Update authenticated user profile
+      parameters:
+      - description: Update profile payload
+        in: body
+        name: body
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success update profile
+          schema:
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      security:
+      - BearerAuth: []
+      summary: Update user profile
+      tags:
+      - User
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

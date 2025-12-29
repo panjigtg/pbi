@@ -4,8 +4,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 
 	"pbi/internal/helper"
-	authmodels "pbi/internal/pkg/models"
-	authusc "pbi/internal/pkg/usecase"
+	"pbi/internal/pkg/models"
+	"pbi/internal/pkg/usecase"
 )
 
 type AuthController interface {
@@ -13,18 +13,31 @@ type AuthController interface {
 	Register(ctx *fiber.Ctx) error
 }
 
+
 type authControllerImpl struct {
-	authUsc authusc.AuthUseCase
+	authUsc usecase.AuthUseCase
 }
 
-func NewAuthController(authUsc authusc.AuthUseCase) AuthController {
+func NewAuthController(authUsc usecase.AuthUseCase) AuthController {
 	return &authControllerImpl{
 		authUsc: authUsc,
 	}
 }
 
+// Register godoc
+// @Summary     Register user
+// @Description Create new user account
+// @Tags        Auth
+// @Accept      json
+// @Produce     json
+// @Param 		body body models.RegisterRequest true "Register payload"
+// @Success     200 {object} object "Success register user"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     409 {object} object "Email already exists"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /auth/register [post]
 func (uc *authControllerImpl) Register(ctx *fiber.Ctx) error {
-	req := new(authmodels.RegisterRequest)
+	req := new(models.RegisterRequest)
 
 	if err := ctx.BodyParser(req); err != nil {
 		return helper.BadRequest(
@@ -50,8 +63,19 @@ func (uc *authControllerImpl) Register(ctx *fiber.Ctx) error {
 	)
 }
 
+// Login godoc
+// @Summary     Login user
+// @Description Login using email and password
+// @Tags        Auth
+// @Accept      json
+// @Produce     json
+// @Success     200 {object} object "Success login"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     401 {object} object "Invalid email or password"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /auth/login [post]
 func (uc *authControllerImpl) Login(ctx *fiber.Ctx) error {
-	req := new(authmodels.LoginRequest)
+	req := new(models.LoginRequest)
 
 	if err := ctx.BodyParser(req); err != nil {
 		return helper.BadRequest(

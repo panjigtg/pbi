@@ -23,6 +23,19 @@ func NewUserController(usrUsc usecase.UserUseCase) UserController {
 	}
 }
 
+// UpdateProfile godoc
+// @Summary     Update user profile
+// @Description Update authenticated user profile
+// @Tags        User
+// @Accept      json
+// @Produce     json
+// @Security    BearerAuth
+// @Param       body body object true "Update profile payload"
+// @Success     200 {object} object "Success update profile"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /user/profile [put]
 func (uc *userControllerImpl) UpdateProfile(ctx *fiber.Ctx) error {
 	req := new(models.UpdateProfileRequest)
 	if err := ctx.BodyParser(req); err != nil {
@@ -63,6 +76,17 @@ func (uc *userControllerImpl) UpdateProfile(ctx *fiber.Ctx) error {
 	)
 }
 
+// GetProfile godoc
+// @Summary     Get user profile
+// @Description Get authenticated user profile
+// @Tags        User
+// @Produce     json
+// @Security    BearerAuth
+// @Success     200 {object} object "Success get profile"
+// @Failure     400 {object} object "Bad Request"
+// @Failure     401 {object} object "Unauthorized"
+// @Failure     500 {object} object "Internal Server Error"
+// @Router      /user/profile [get]
 func (uc *userControllerImpl) GetProfile(ctx *fiber.Ctx) error {
 	userID, ok := ctx.Locals("user_id").(int)
 	if !ok {
